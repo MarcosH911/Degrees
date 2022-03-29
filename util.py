@@ -1,8 +1,8 @@
 class Node():
     def __init__(self, state, parent, action):
-        self.state = state
+        self.state = state  # person id
         self.parent = parent
-        self.action = action
+        self.action = action  # (movie id, person id)
 
 
 class StackFrontier():

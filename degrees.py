@@ -62,10 +62,12 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    source = person_id_for_name(input("Name: "))
+    # source = person_id_for_name(input("Name: "))
+    source = person_id_for_name("Kevin Bacon")
     if source is None:
         sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
+    # target = person_id_for_name(input("Name: "))
+    target = person_id_for_name("Cary Elwes")
     if target is None:
         sys.exit("Person not found.")
 
@@ -92,8 +94,29 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    frontier = QueueFrontier()
+    frontier.add(Node(source, None, None))
+
+    while not frontier.empty():
+
+        node = frontier.remove()
+        print(f"State: {node.state} \nAction: {node.action}")
+
+        if frontier.contains_state(target):
+            path = []
+
+            path.append(node.action)
+
+            while node.parent.parent:
+                node = node.parent
+                path.append(node.action)
+
+            path.reverse()
+            return path
+
+        for choice in neighbors_for_person(node.state):
+            frontier.add(Node(choice[1], node, choice))
+
 
 
 def person_id_for_name(name):
