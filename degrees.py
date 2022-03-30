@@ -97,10 +97,12 @@ def shortest_path(source, target):
     frontier = QueueFrontier()
     frontier.add(Node(source, None, None))
 
+    nodes_searched = []
+
     while not frontier.empty():
 
         node = frontier.remove()
-        print(f"State: {node.state} \nAction: {node.action}")
+        print(f"\nState: {node.state} \nAction: {node.action}")
 
         if frontier.contains_state(target):
             path = []
@@ -115,7 +117,12 @@ def shortest_path(source, target):
             return path
 
         for choice in neighbors_for_person(node.state):
-            frontier.add(Node(choice[1], node, choice))
+            print(choice)
+            for frontier_node in frontier.frontier:
+                if not frontier_node.action == choice and not frontier_node.action in nodes_searched:
+                    frontier.add(Node(choice[1], node, choice))
+                    nodes_searched.append(node.action)
+                    
 
 
 
