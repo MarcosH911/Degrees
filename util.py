@@ -2,7 +2,7 @@ class Node():
     def __init__(self, state, parent, action):
         self.state = state  # person id
         self.parent = parent
-        self.action = action  # (movie id, person id)
+        self.action = action  # movie id
 
 
 class StackFrontier():

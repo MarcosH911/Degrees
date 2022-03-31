@@ -62,15 +62,14 @@ def main():
     load_data(directory)
     print("Data loaded.")
 
-    # source = person_id_for_name(input("Name: "))
-    source = person_id_for_name("Kevin Bacon")
+    source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-    # target = person_id_for_name(input("Name: "))
-    target = person_id_for_name("Cary Elwes")
+    target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
+    print("Trying to find the shortest path...")
     path = shortest_path(source, target)
 
     if path is None:
@@ -95,35 +94,36 @@ def shortest_path(source, target):
     """
 
     frontier = QueueFrontier()
-    frontier.add(Node(source, None, None))
+    start = Node(source, None, None)
+    frontier.add(start)
 
-    nodes_searched = []
+    nodes_explored = set()
 
-    while not frontier.empty():
+    actions_explored = 0
+
+    while True:
+
+        if frontier.empty():
+            return
 
         node = frontier.remove()
-        print(f"\nState: {node.state} \nAction: {node.action}")
+        actions_explored += 1
 
-        if frontier.contains_state(target):
-            path = []
+        if node.state == target:
+            solution = []
 
-            path.append(node.action)
-
-            while node.parent.parent:
+            while node.parent:
+                solution.append((node.action, node.state))
                 node = node.parent
-                path.append(node.action)
+            solution.reverse()
+            return solution
 
-            path.reverse()
-            return path
+        nodes_explored.add(node.state)
 
-        for choice in neighbors_for_person(node.state):
-            print(choice)
-            for frontier_node in frontier.frontier:
-                if not frontier_node.action == choice and not frontier_node.action in nodes_searched:
-                    frontier.add(Node(choice[1], node, choice))
-                    nodes_searched.append(node.action)
-                    
-
+        for action, state in neighbors_for_person(node.state):
+            if not frontier.contains_state(state) and state not in nodes_explored:
+                child = Node(state, node, action)
+                frontier.add(child)
 
 
 def person_id_for_name(name):
